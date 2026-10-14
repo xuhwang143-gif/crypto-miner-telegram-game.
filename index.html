@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>Crypto Miner Tycoon</title>
+<style>
+:root{--bg:#0b1120;--panel:#131e31;--panel2:#1a2941;--line:#293b57;--text:#edf4ff;--muted:#9db0ca;--cyan:#5de1e6;--gold:#ffd166;--green:#7ce7a4;--red:#ff8b8b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#172943 0,#0b1120 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:920px;margin:auto;padding:18px 14px 34px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#5de1e6,#7c83ff);display:grid;place-items:center;font-size:25px;box-shadow:0 8px 28px #5de1e633}
+h1{font-size:20px;margin:0;letter-spacing:.2px}.subtitle{color:var(--muted);font-size:12px}.pill{border:1px solid var(--line);background:#142238;color:var(--cyan);border-radius:999px;padding:7px 10px;font-size:12px;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}.stat,.panel{background:linear-gradient(145deg,#16243a,#111b2d);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 12px 30px #0002}
+.stat .label{font-size:12px;color:var(--muted)}.stat .value{font-size:clamp(18px,4vw,27px);font-weight:800;margin-top:4px;overflow-wrap:anywhere}.stat .unit{font-size:11px;color:var(--muted);font-weight:500}
+.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}.panel h2{font-size:16px;margin:0 0 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rig{border:1px solid #314866;border-radius:16px;padding:18px;background:radial-gradient(circle at 50% 0,#203b56,#101a2a 70%);text-align:center}
+.rig-icon{font-size:72px;filter:drop-shadow(0 8px 14px #5de1e622);margin:5px 0}.rig-name{font-weight:800;font-size:18px}.muted{color:var(--muted)}.small{font-size:12px}.progress{height:8px;border-radius:99px;background:#26364c;overflow:hidden;margin:12px 0}.progress span{height:100%;display:block;width:0;background:linear-gradient(90deg,var(--cyan),#8c9bff);transition:width .3s}
+button{border:0;border-radius:12px;padding:12px 14px;font:700 14px system-ui;cursor:pointer;transition:transform .08s,filter .15s}button:active{transform:scale(.98)}button:disabled{opacity:.45;cursor:not-allowed}
+.primary{background:linear-gradient(135deg,#5de1e6,#70b9ff);color:#071522}.secondary{background:#223651;color:var(--text);border:1px solid #354c6c}.gold{background:linear-gradient(135deg,#ffd166,#ffae57);color:#2b1b00}.full{width:100%}.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.machine-list{display:grid;gap:9px}.machine{display:flex;gap:10px;align-items:center;padding:11px;border-radius:13px;background:#101a2b;border:1px solid #263953}.machine-icon{font-size:29px;width:42px;text-align:center}.machine-info{flex:1;min-width:0}.machine-title{font-weight:750}.machine-desc{font-size:12px;color:var(--muted)}.machine-action{min-width:91px;text-align:right}.price{font-size:12px;color:var(--gold);margin-bottom:5px}
+.tabs{display:flex;gap:8px;margin:12px 0}.tab{flex:1;background:#15243a;border:1px solid var(--line);color:var(--muted)}.tab.active{background:#24435a;color:var(--cyan);border-color:#3b7181}
+.section{display:none}.section.active{display:block}.mission{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #26364c}.mission:last-child{border-bottom:0}.notice{border:1px solid #3b536e;border-radius:12px;padding:10px 12px;background:#102039;color:#bdd0e8;font-size:12px;margin-top:12px}
+footer{text-align:center;color:#6f829d;font-size:11px;padding:18px 5px 0}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#eafaff;color:#10202c;padding:10px 16px;border-radius:99px;font-weight:750;box-shadow:0 10px 30px #0006;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}.toast.show{opacity:1}
+@media(max-width:680px){.wrap{padding:13px 10px 25px}.layout{grid-template-columns:1fr}.stats{gap:7px}.stat{padding:11px}.stat .value{font-size:20px}.pill{font-size:10px}.rig-icon{font-size:62px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div class="brand"><div class="logo">⛏️</div><div><h1>Crypto Miner Tycoon</h1><div class="subtitle">Game đào coin giả lập • Bản thử nghiệm</div></div></div>
+ <div class="pill">🟢 DEMO • Coin ảo</div>
+</header>
+<div class="stats">
+ <div class="stat"><div class="label">🪙 SỐ COIN</div><div class="value" id="coins">0</div><div class="unit">coin ảo</div></div>
+ <div class="stat"><div class="label">⚡ TỔNG POWER</div><div class="value" id="power">1</div><div class="unit">Power / giây</div></div>
+ <div class="stat"><div class="label">🖥️ SỐ MÁY</div><div class="value" id="machineCount">1</div><div class="unit">máy đào</div></div>
+</div>
+<div class="layout">
+ <section class="panel">
+  <h2>⛏️ Dàn máy của bạn <span class="pill" id="levelPill">Cấp 1</span></h2>
+  <div class="rig">
+   <div class="rig-icon" id="rigIcon">🖥️</div>
+   <div class="rig-name" id="rigName">Starter Miner</div>
+   <div class="muted small" id="rigDesc">Một chiếc máy cơ bản để bắt đầu hành trình.</div>
+   <div class="progress"><span id="progressBar"></span></div>
+   <div class="small muted" id="rateText">Đang tạo 1 coin/giây</div>
+  </div>
+  <div class="btnrow">
+   <button class="primary" id="upgradeBtn">⬆️ Nâng cấp</button>
+   <button class="secondary" id="tapBtn">👆 Bấm nhận +1</button>
+  </div>
+  <div class="notice">Mẹo: nâng cấp máy để tăng tốc độ tạo coin. Đóng trang rồi quay lại, tiến trình sẽ được lưu trên trình duyệt này.</div>
+ </section>
+ <section class="panel">
+  <h2>🛒 Cửa hàng máy đào</h2>
+  <div class="machine-list" id="shop"></div>
+ </section>
+</div>
+<div class="tabs">
+ <button class="tab active" data-tab="missions">🎯 Nhiệm vụ</button>
+ <button class="tab" data-tab="statsTab">📊 Thống kê</button>
+ <button class="tab" data-tab="about">ℹ️ Hướng dẫn</button>
+</div>
+<section class="panel section active" id="missions">
+ <h2>Nhiệm vụ hôm nay <span class="pill">Thưởng coin ảo</span></h2>
+ <div class="mission"><div><b>Chào mừng thợ đào</b><div class="small muted">Nhận phần thưởng khởi đầu</div></div><button class="gold" id="welcomeBtn">Nhận +25</button></div>
+ <div class="mission"><div><b>Nâng cấp máy</b><div class="small muted">Nâng cấp máy ít nhất 1 lần</div></div><button class="secondary" id="upgradeMissionBtn" disabled>+50</button></div>
+ <div class="mission"><div><b>Sưu tập máy</b><div class="small muted">Sở hữu từ 3 máy trở lên</div></div><button class="secondary" id="collectMissionBtn" disabled>+100</button></div>
+</section>
+<section class="panel section" id="statsTab">
+ <h2>📊 Thống kê tài khoản</h2>
+ <div class="mission"><span class="muted">Tổng coin đã đào</span><b id="totalMined">0</b></div>
+ <div class="mission"><span class="muted">Số lần nâng cấp</span><b id="upgradeCount">0</b></div>
+ <div class="mission"><span class="muted">Thời gian chơi</span><b id="playTime">0 phút</b></div>
+ <div class="mission"><span class="muted">Coin kiếm ngoại tuyến</span><b id="offlineCoins">0</b></div>
+ <button class="secondary full" id="resetBtn" style="margin-top:12px">Xóa tiến trình và chơi lại</button>
+</section>
+<section class="panel section" id="about">
+ <h2>ℹ️ Cách chơi</h2>
+ <p>1. Máy đào tự tạo coin theo thời gian.</p><p>2. Bấm “Nâng cấp” để tăng Power.</p><p>3. Mua thêm máy trong cửa hàng để tăng tổng tốc độ đào.</p><p>4. Hoàn thành nhiệm vụ để nhận coin thưởng.</p>
+ <div class="notice">Đây là game mô phỏng. Coin trong game không phải tiền điện tử, không có giá trị quy đổi và không thể rút tiền thật. Dữ liệu hiện lưu cục bộ trên trình duyệt.</div>
+</section>
+<footer>Crypto Miner Tycoon • Prototype 0.1 • Made for learning</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+const SAVE_KEY = "cryptoMinerTycoon_v1";
+const machines = [
+ {id:"starter",name:"Starter Miner",icon:"🖥️",desc:"+1 Power/giây",power:1,cost:0},
+ {id:"gpu",name:"GPU Rig",icon:"🎮",desc:"+3 Power/giây",power:3,cost:100},
+ {id:"asic",name:"ASIC Miner",icon:"⚙️",desc:"+10 Power/giây",power:10,cost:500},
+ {id:"farm",name:"Mining Farm",icon:"🏭",desc:"+35 Power/giây",power:35,cost:2000},
+ {id:"quantum",name:"Quantum Rig",icon:"💠",desc:"+120 Power/giây",power:120,cost:10000}
+];
+const defaults = {coins:0,power:1,machineCount:1,level:1,upgrades:0,totalMined:0,startedAt:Date.now(),lastSeen:Date.now(),welcomeClaimed:false,upgradeRewardClaimed:false,collectRewardClaimed:false,owned:{starter:1},offlineCoins:0};
+let state = load();
+function load(){
+ try { const raw=localStorage.getItem(SAVE_KEY); return raw?{...defaults,...JSON.parse(raw),owned:{...defaults.owned,...JSON.parse(raw).owned}}:{...defaults,owned:{...defaults.owned}}; }
+ catch(e){return {...defaults,owned:{...defaults.owned}};}
+}
+function save(){state.lastSeen=Date.now();localStorage.setItem(SAVE_KEY,JSON.stringify(state));}
+function fmt(n){ if(n>=1e9)return (n/1e9).toFixed(2)+"B";if(n>=1e6)return (n/1e6).toFixed(2)+"M";if(n>=1e3)return n.toLocaleString("vi-VN",{maximumFractionDigits:1});return Math.floor(n).toLocaleString("vi-VN");}
+function totalPower(){return machines.reduce((sum,m)=>sum+(state.owned[m.id]||0)*m.power,0)+(state.level-1)*2;}
+function costUpgrade(){return Math.floor(50*Math.pow(1.65,state.level-1));}
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800);}
+function renderShop(){
+ const shop=document.getElementById("shop");
+ shop.innerHTML=machines.slice(1).map(m=>{
+  const owned=state.owned[m.id]||0; const can=state.coins>=m.cost;
+  return `<div class="machine"><div class="machine-icon">${m.icon}</div><div class="machine-info"><div class="machine-title">${m.name}</div><div class="machine-desc">${m.desc} • Đang có: ${owned}</div></div><div class="machine-action"><div class="price">🪙 ${fmt(m.cost)}</div><button class="${can?'primary':'secondary'}" data-buy="${m.id}" ${can?'':'disabled'}>Mua máy</button></div></div>`;
+ }).join("");
+ shop.querySelectorAll("[data-buy]").forEach(btn=>btn.addEventListener("click",()=>buyMachine(btn.dataset.buy)));
+}
+function render(){
+ const power=totalPower();
+ document.getElementById("coins").textContent=fmt(state.coins);
+ document.getElementById("power").textContent=fmt(power);
+ document.getElementById("machineCount").textContent=fmt(Object.values(state.owned).reduce((a,b)=>a+b,0));
+ document.getElementById("levelPill").textContent="Cấp "+state.level;
+ document.getElementById("rigIcon").textContent=state.level>=10?"💠":state.level>=5?"⚙️":"🖥️";
+ document.getElementById("rigName").textContent=state.level>=10?"Advanced Miner":state.level>=5?"Pro Miner":"Starter Miner";
+ document.getElementById("rigDesc").textContent="Máy cấp "+state.level+" • Tăng Power khi nâng cấp";
+ document.getElementById("rateText").textContent="Đang tạo "+fmt(power)+" coin/giây";
+ document.getElementById("upgradeBtn").textContent="⬆️ Nâng cấp ("+fmt(costUpgrade())+")";
+ document.getElementById("upgradeBtn").disabled=state.coins<costUpgrade();
+ document.getElementById("progressBar").style.width=Math.min(100,(state.coins%costUpgrade())/costUpgrade()*100)+"%";
+ document.getElementById("totalMined").textContent=fmt(state.totalMined);
+ document.getElementById("upgradeCount").textContent=fmt(state.upgrades);
+ document.getElementById("playTime").textContent=Math.max(0,Math.floor((Date.now()-state.startedAt)/60000))+" phút";
+ document.getElementById("offlineCoins").textContent=fmt(state.offlineCoins);
+ document.getElementById("welcomeBtn").disabled=state.welcomeClaimed;
+ document.getElementById("welcomeBtn").textContent=state.welcomeClaimed?"Đã nhận":"Nhận +25";
+ document.getElementById("upgradeMissionBtn").disabled=state.upgrades<1||state.upgradeRewardClaimed;
+ document.getElementById("upgradeMissionBtn").textContent=state.upgradeRewardClaimed?"Đã nhận":"+50";
+ const count=Object.values(state.owned).reduce((a,b)=>a+b,0);
+ document.getElementById("collectMissionBtn").disabled=count<3||state.collectRewardClaimed;
+ document.getElementById("collectMissionBtn").textContent=state.collectRewardClaimed?"Đã nhận":"+100";
+ renderShop();
+}
+function upgrade(){
+ const cost=costUpgrade(); if(state.coins<cost)return;
+ state.coins-=cost;state.level++;state.upgrades++;state.power=totalPower();save();render();toast("Nâng cấp thành công! Power tăng.");
+}
+function buyMachine(id){
+ const m=machines.find(x=>x.id===id);if(!m||state.coins<m.cost)return;
+ state.coins-=m.cost;state.owned[id]=(state.owned[id]||0)+1;state.machineCount++;state.power=totalPower();save();render();toast("Đã mua "+m.name+"!");
+}
+document.getElementById("upgradeBtn").addEventListener("click",upgrade);
+document.getElementById("tapBtn").addEventListener("click",()=>{state.coins+=1;state.totalMined+=1;save();render();});
+document.getElementById("welcomeBtn").addEventListener("click",()=>{if(state.welcomeClaimed)return;state.welcomeClaimed=true;state.coins+=25;save();render();toast("Nhận 25 coin thành công!");});
+document.getElementById("upgradeMissionBtn").addEventListener("click",()=>{if(state.upgrades<1||state.upgradeRewardClaimed)return;state.upgradeRewardClaimed=true;state.coins+=50;save();render();toast("Nhận 50 coin thành công!");});
+document.getElementById("collectMissionBtn").addEventListener("click",()=>{if(Object.values(state.owned).reduce((a,b)=>a+b,0)<3||state.collectRewardClaimed)return;state.collectRewardClaimed=true;state.coins+=100;save();render();toast("Nhận 100 coin thành công!");});
+document.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));
+ document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===btn.dataset.tab));
+}));
+document.getElementById("resetBtn").addEventListener("click",()=>{
+ if(confirm("Bạn chắc chắn muốn xóa toàn bộ tiến trình?")){localStorage.removeItem(SAVE_KEY);state={...defaults,startedAt:Date.now(),lastSeen:Date.now(),owned:{starter:1}};save();render();toast("Đã tạo tiến trình mới.");}
+});
+// Offline progress is capped at 8 hours in this local demo.
+const awaySeconds=Math.min(8*60*60,Math.max(0,(Date.now()-(state.lastSeen||Date.now()))/1000));
+if(awaySeconds>5){const gain=Math.floor(totalPower()*awaySeconds);state.coins+=gain;state.totalMined+=gain;state.offlineCoins+=gain;}
+state.power=totalPower();save();render();
+setInterval(()=>{state.coins+=totalPower();state.totalMined+=totalPower();render();},1000);
+setInterval(save,5000);
+window.addEventListener("beforeunload",save);
+})();
+</script>
+</body>
+</html>
